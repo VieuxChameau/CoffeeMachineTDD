@@ -14,7 +14,7 @@ public class CoffeeMachineTest {
 	
 	@Test
 	public void should_convert_tea_wish_with_sugar() {
-		final CustomerWish wish = new CustomerWish(TEA, 1);
+		final CustomerWish wish = new CustomerWish(TEA, 1, 0.4);
 		
 		final String result = coffeeMachine.toDMProtocol(wish);
 		
@@ -23,7 +23,7 @@ public class CoffeeMachineTest {
 	
 	@Test
 	public void should_convert_coffee_wish_with_sugars() {
-		final CustomerWish wish = new CustomerWish(COFFEE, 2);
+		final CustomerWish wish = new CustomerWish(COFFEE, 2, 0.6);
 		
 		final String result = coffeeMachine.toDMProtocol(wish);
 		
@@ -32,11 +32,29 @@ public class CoffeeMachineTest {
 	
 	@Test
 	public void should_convert_chocolate_wish_without_sugar() {
-		final CustomerWish wish = new CustomerWish(CHOCOLATE, 0);
+		final CustomerWish wish = new CustomerWish(CHOCOLATE, 0, 0.5);
 		
 		final String result = coffeeMachine.toDMProtocol(wish);
 		
 		assertThat(result).isEqualTo("H::");
+	}
+
+	@Test
+	public void should_reject_wish_without_enough_money(){
+		final CustomerWish wish = new CustomerWish(CHOCOLATE, 0, 0.3);
+		
+		final String result = coffeeMachine.toDMProtocol(wish);
+		
+		assertThat(result).isEqualTo("M:0.2");
+	}
+	
+	@Test
+	public void should_make_drink_with_more_money(){
+		final CustomerWish wish = new CustomerWish(COFFEE, 0, 0.7);
+		
+		final String result = coffeeMachine.toDMProtocol(wish);
+		
+		assertThat(result).isEqualTo("C::");
 	}
 
 }
