@@ -8,21 +8,25 @@ public class CoffeeMachine {
 	
 	public String toDMProtocol(final CustomerWish wish) {
 		final DrinkType drinkType = wish.getDrinkType();
-		final StringBuilder result = new StringBuilder();
 		final double price = drinkType.getPrice();
 		final double amount = wish.getAmount();
 		if(amount < price) {
 			return "M:" + (price - amount);
 		}
 		
-		result.append(drinkType.getCode()).append(SEPARATOR);
+		final StringBuilder sb = new StringBuilder();
+		sb.append(drinkType.getCode());
+		if (wish.isExtraHot() && drinkType.canBeExtraHot()) {
+			sb.append('h');
+		}
+		sb.append(SEPARATOR);
 		if(wish.hasSugar()) {
-			result.append(wish.getSugars()).append(SEPARATOR).append("0");
+			sb.append(wish.getSugars()).append(SEPARATOR).append("0");
 		}
 		else {
-			result.append(SEPARATOR);
+			sb.append(SEPARATOR);
 		}
 		
-		return result.toString();
+		return sb.toString();
 	}
 }
