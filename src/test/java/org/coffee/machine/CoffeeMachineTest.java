@@ -6,6 +6,8 @@ import static org.coffee.machine.pojo.DrinkType.ORANGE;
 import static org.coffee.machine.pojo.DrinkType.TEA;
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.Map;
+
 import org.coffee.machine.pojo.CustomerWish;
 import org.coffee.machine.pojo.DrinkType;
 import org.junit.Test;
@@ -93,5 +95,25 @@ public class CoffeeMachineTest {
 		final String result = coffeeMachine.toDMProtocol(wish);
 		
 		assertThat(result).isEqualTo("Th:2:0");
+	}
+	
+	@Test
+	public void should_generate_report() {
+		coffeeMachine.toDMProtocol(new CustomerWish(CHOCOLATE, 1, 0.5, true));
+		coffeeMachine.toDMProtocol(new CustomerWish(ORANGE, 0, 0.6));
+		coffeeMachine.toDMProtocol(new CustomerWish(TEA, 2, 0.4, true));
+		coffeeMachine.toDMProtocol(new CustomerWish(CHOCOLATE, 1, 0.5, true));
+		coffeeMachine.toDMProtocol(new CustomerWish(TEA, 2, 0.4, true));
+		
+		final Report report = coffeeMachine.getReport();
+		
+		assertThat(report).isNotNull();
+		
+		assertThat(report.getMoneyInTheBank().doubleValue()).isEqualTo(2.4);
+		
+		final Map<DrinkType, Integer> numberSoldByDrink = report.getNumberSoldByDrink();
+		assertThat(numberSoldByDrink.get(ORANGE)).isEqualTo(1);
+		assertThat(numberSoldByDrink.get(CHOCOLATE)).isEqualTo(2);
+		assertThat(numberSoldByDrink.get(TEA)).isEqualTo(2);
 	}
 }

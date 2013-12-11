@@ -5,6 +5,7 @@ import org.coffee.machine.pojo.DrinkType;
 
 public class CoffeeMachine {
 	private static final String SEPARATOR = ":";
+	private final CashRegister cashRegister = new CashRegister();
 	
 	public String toDMProtocol(final CustomerWish wish) {
 		final DrinkType drinkType = wish.getDrinkType();
@@ -27,6 +28,12 @@ public class CoffeeMachine {
 			sb.append(SEPARATOR);
 		}
 		
+		cashRegister.pay(drinkType);
+		
 		return sb.toString();
+	}
+	
+	public Report getReport() {
+		return cashRegister.generateReport();
 	}
 }
